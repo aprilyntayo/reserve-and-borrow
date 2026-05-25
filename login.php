@@ -21,9 +21,9 @@ if (isset($_POST['login'])) {
     $username = trim($_POST['username']);
     $password = $_POST['password'];
 
-    // Select user with role information
+    // Select user with role and signatory information
     $stmt = $conn->prepare(
-        "SELECT id, uname, password, role, email, department FROM users WHERE uname = ?"
+        "SELECT id, uname, password, role, email, signatory_title FROM users WHERE uname = ?"
     );
     $stmt->bind_param("s", $username);
     $stmt->execute();
@@ -31,15 +31,26 @@ if (isset($_POST['login'])) {
 
     if ($user = $result->fetch_assoc()) {
         if (password_verify($password, $user['password'])) {
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['uname']   = $user['uname'];
-            $_SESSION['role']    = $user['role'];
-            $_SESSION['email']   = $user['email'];
-            $_SESSION['department'] = $user['department'];
+            $_SESSION['user_id']         = $user['id'];
+            $_SESSION['uname']           = $user['uname'];
+            $_SESSION['role']            = $user['role'];
+            $_SESSION['email']           = $user['email'];
+            $_SESSION['signatory_title'] = $user['signatory_title'];
 
-            // Redirect based on role
+            // Redirect based on role and signatory_title
             if ($user['role'] === 'super_admin') {
-                header("Location: super_admin_dashboard.php");
+                // Check if user is a signatory
+                if (!empty($user['signatory_title'])) {
+                    if ($user['signatory_title'] === 'Dept_Head') {
+                        header("Location: programhead_dashboard.php");
+                    } elseif ($user['signatory_title'] === 'VP_Admin') {
+                        header("Location: vp_dashboard.php");
+                    } else {
+                        header("Location: super_admin_dashboard.php");
+                    }
+                } else {
+                    header("Location: super_admin_dashboard.php");
+                }
             } elseif ($user['role'] === 'admin') {
                 header("Location: admin_dashboard.php");
             } else {
@@ -254,7 +265,6 @@ body {
     border: 1px solid rgba(0, 128, 0, 0.3);
 }
 
-/* Google icon colors */
 .google-icon {
     width: 20px;
     height: 20px;
