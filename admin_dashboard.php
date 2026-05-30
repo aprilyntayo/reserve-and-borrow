@@ -1122,10 +1122,13 @@ td strong { color: var(--dark); }
             </div>
         </div>
         <div class="header-right">
-            <div class="search-box">
+            <form method="GET" action="admin_dashboard.php" class="search-box">
+                <input type="hidden" name="section" value="<?= htmlspecialchars($currentSection) ?>">
+                <input type="hidden" name="filter" value="<?= htmlspecialchars($currentFilter) ?>">
+                
                 <i class="fas fa-search"></i>
-                <input type="text" id="globalSearch" placeholder="Quick search…" oninput="globalSearchTable(this.value)">
-            </div>
+                <input type="text" name="search" id="globalSearch" placeholder="Search and press enter…" value="<?= htmlspecialchars($searchQuery) ?>">
+            </form>
 
             <!-- Notification bell -->
             <div class="notif-wrap">
@@ -1524,8 +1527,7 @@ function filterTable(query) {
     });
 }
 function globalSearchTable(query) {
-    const tSearch = document.getElementById('tableSearch');
-    if (tSearch) { tSearch.value = query; filterTable(query); }
+    filterTable(query);
     filterUsers(query);
 }
 
