@@ -563,6 +563,9 @@ td strong { color:var(--dark); }
         <a href="programhead_dashboard.php" class="active">
             <div class="nav-icon"><i class="fas fa-table-cells-large"></i></div> Dashboard
         </a>
+        <a href="prog_history.php">
+    <div class="nav-icon"><i class="fas fa-clock-rotate-left"></i></div> Request History
+        </a>
         <hr>
         <div class="nav-section-label">System</div>
         <a href="logout.php"><div class="nav-icon"><i class="fas fa-right-from-bracket"></i></div> Logout</a>
